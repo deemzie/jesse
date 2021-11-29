@@ -14,7 +14,7 @@ def engulfing(candles: np.ndarray, size: float = 0.5, sequential: bool = False) 
 
     Returns
     -------
-    1 or 2 if bullish pattern with right candle engulfing the 1 or 2 left ones, 3 if both for sequential
+    1 or 2 if bullish pattern with right candle engulfing the 1 or 2 left ones
     -1 and -2 idem for bearish
     0 no pattern
     """
@@ -46,10 +46,10 @@ def engulfing(candles: np.ndarray, size: float = 0.5, sequential: bool = False) 
         
     else:
 
-        open = candles[:, 1]
-        close = candles[:, 2]
-        high = candles[:, 3]
-        low = candles[:, 4]
+        open = candles[-1, 1]
+        close = candles[-1, 2]
+        high = candles[-1, 3]
+        low = candles[-1, 4]
         
         last_open = candles[-2, 1]
         last_close = candles[-2, 2]
@@ -60,8 +60,6 @@ def engulfing(candles: np.ndarray, size: float = 0.5, sequential: bool = False) 
         prev_close = candles[-3, 2]
         prev_high = candles[-3, 3]
         prev_low = candles[-3, 4]
-        
-        
         
         if last_open >= last_close and close >= last_high and last_close >= open and (close - open) / open > size / 100:
             return 1
