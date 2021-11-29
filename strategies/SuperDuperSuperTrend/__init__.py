@@ -16,6 +16,10 @@ Hyperparameters: Risk both sides, R/R, TP amount in %, Indicators Settings, Thre
 
 Fixed Parameters: lookback on S/R levers set to 12 candles, minimim relative slope of the DEMA set to 0.1%
 
+Recommended Timeframe: 4h
+
+Note:
+
 """
 
 from jesse.strategies import Strategy
@@ -72,7 +76,7 @@ class SuperDuperSuperTrend(Strategy):
     
     @property
     def supertrend(self):
-        return ta.supertrend(self.candles, self.hp['st_atr'], self.hp['st_period 6x'] / 6.)
+        return ta.supertrend(self.candles, self.hp['st_atr'], self.hp['st_period x6'] / 6.)
     
     '''
     Filters
