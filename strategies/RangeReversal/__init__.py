@@ -14,6 +14,8 @@ Hyperparameters: Risk both sides, R/R, TP amount in %, Indicators Settings, Thre
 
 Fixed Parameters: the ST trail period starts at 3.5
 
+Recommended Timeframe: 4h
+
 Note: The ST trail period is the closest to the price with the right trend direction 
 
 """
@@ -32,27 +34,26 @@ class RangeReversal(Strategy):
     
     def __init__(self):
         super().__init__()
-        self.vars['zones'] = [(3800., 4000.), (2500., 2900.),(1700., 1900.)]
+        self.vars['zones'] = [(3800., 4200.), (2500., 2900.),(1700., 1900.)]
         self.vars['trail_period x4'] = 14
     
     def hyperparameters(self):
         return [
-            {'name': 'risk_long',      'type': int, 'min': 0,  'max': 50, 'default': 30},
-            {'name': 'risk_short',     'type': int, 'min': 0,  'max': 25, 'default': 30},
+            {'name': 'risk_long',      'type': int, 'min': 0,  'max': 50, 'default': 5},
+            {'name': 'risk_short',     'type': int, 'min': 0,  'max': 25, 'default': 5},
             {'name': 'r:r x6',         'type': int, 'min': 1,  'max': 30, 'default': 4},
             {'name': 'tp1',            'type': int, 'min': 1,  'max': 100,'default': 25},
             {'name': 'tp2',            'type': int, 'min': 1,  'max': 100,'default': 10},
             {'name': 'tp3',            'type': int, 'min': 1,  'max': 100,'default': 25},
             {'name': 'tp4',            'type': int, 'min': 1,  'max': 100,'default': 10},
             {'name': 'tp5',            'type': int, 'min': 1,  'max': 100,'default': 20},
-            
             {'name': 'st_atr',         'type': int, 'min': 1,  'max': 30, 'default': 20},
-            {'name': 'st_period',      'type': int, 'min': 1,  'max': 3,  'default': 2},
             {'name': 'ma_type',        'type': int, 'min': 0,  'max': 39, 'default': 1},
             {'name': 'ma_period',      'type': int, 'min': 1,  'max': 200,'default': 14},
             {'name': 'trail_period x4','type': int, 'min': 1,  'max': 25, 'default': 14},
             {'name': 'atr_period',     'type': int, 'min': 1,  'max': 30, 'default': 14},
-            {'name': 'sensivity',      'type': int, 'min': 1,  'max': 20, 'default': 5},
+            {'name': 'st_period',      'type': int, 'min': 1,  'max': 3,  'default': 2},
+            {'name': 'sensivity x10',  'type': int, 'min': 1,  'max': 20, 'default': 5},
             {'name': 'wick',           'type': int, 'min': 50, 'max': 90, 'default': 60},
         ]
     
@@ -110,7 +111,7 @@ class RangeReversal(Strategy):
 
     def should_long(self) -> bool:
         if self.hp['risk_long'] != 0:
-            bull_pin_ok = cta.pinbar(self.candles, self.hp['sensivity'], self.hp['wick']) > 0
+            bull_pin_ok = cta.pinbar(self.candles, self.hp['sensivity x10'], self.hp['wick']) > 0
             bull_eng_ok = cta.engulfing(self.candles) > 0
             trend_ok = self.close < self.supertrend.trend
             zone = False
@@ -122,7 +123,7 @@ class RangeReversal(Strategy):
 
     def should_short(self) -> bool:
         if self.hp['risk_short'] != 0:
-            bear_pin_ok = cta.pinbar(self.candles, self.hp['sensivity'], self.hp['wick']) < 0
+            bear_pin_ok = cta.pinbar(self.candles, self.hp['sensivity x10'], self.hp['wick']) < 0
             bear_eng_ok = cta.engulfing(self.candles) < 0
             trend_ok = self.close > self.supertrend.trend
             zone = False
@@ -156,8 +157,6 @@ class RangeReversal(Strategy):
 
     def go_short(self):
         if self.hp['risk_short'] != 0:
-            print("supertrend: ")
-            print(self.supertrend.trend)
             entry = self.price
             stop =  cta.high(self.candles, 1) + 2 * self.atr
             tp1 = entry + (entry - stop) * self.hp['r:r x6'] / 6
