@@ -16,20 +16,36 @@ def pinbar(candles: np.ndarray, sensivity: float = 0.5, wick: float = 60, sequen
     +high if the pinbar is bearish, -low if bullish, 0 otherwise
 
     """
+    if sequential:
+        open = candles[:, 1]
+        close = candles[:, 2]
+        high = candles[:, 3]
+        low = candles[:, 4]
+        
+        amplitude = high - low
+        
+        top_wick = high - np.maximum(open, close)
+        bottom_wick = np.minimun(open,close) - low
+        
+        bull = np.where(top_wick / amplitude > wick / 100 and amplitude / low > sensivity / 100, high, 0)
+        bear = np.where(bottom_wick / amplitude > wick / 100 and amplitude / low > sensivity / 100, -low, 0)
+        
+        return bull + bear
 
-    open = candles[-1, 1]
-    close = candles[-1, 2]
-    high = candles[-1, 3]
-    low = candles[-1, 4]
-    
-    amplitude = high - low
-    
-    top_wick = high - max(open, close)
-    bottom_wick = min(open,close) - low
-
-    if top_wick / amplitude > wick / 100 and amplitude / low > sensivity / 100:
-        return high
-    elif bottom_wick / amplitude > wick / 100 and amplitude / low > sensivity / 100:
-        return -low
     else:
-        return 0
+        open = candles[-1, 1]
+        close = candles[-1, 2]
+        high = candles[-1, 3]
+        low = candles[-1, 4]
+    
+        amplitude = high - low
+        
+        top_wick = high - max(open, close)
+        bottom_wick = min(open,close) - low
+    
+        if top_wick / amplitude > wick / 100 and amplitude / low > sensivity / 100:
+            return high
+        elif bottom_wick / amplitude > wick / 100 and amplitude / low > sensivity / 100:
+            return -low
+        else:
+            return 0
