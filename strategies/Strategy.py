@@ -452,12 +452,12 @@ class Strategy(ABC):
             return
 
         try:
-            if self.is_long:
+            if self.is_long and self.buy is not None:
                 # prepare format
                 self._prepare_buy(make_copies=False)
 
                 # if entry has been modified
-                if self.buy is not None and self._buy is not None and self.buy.shape != self._buy.shape or not np.allclose(self.buy, self._buy, rtol = 1e-05, atol = 0):
+                if self._buy is None or self.buy.shape != self._buy.shape or not np.allclose(self.buy, self._buy, rtol = 1e-05, atol = 0):
                     self._buy = self.buy.copy()
 
                     # cancel orders
@@ -482,12 +482,12 @@ class Strategy(ABC):
                         if submitted_order:
                             self._open_position_orders.append(submitted_order)
 
-            elif self.is_short:
+            elif self.is_short and self.sell is not None:
                 # prepare format
                 self._prepare_sell(make_copies=False)
 
                 # if entry has been modified
-                if self.sell is not None and self._sell is not None and self.sell.shape != self._sell.shape or not np.allclose(self.sell, self._sell, rtol = 1e-05, atol = 0):
+                if self._sell is None or self.sell.shape != self._sell.shape or not np.allclose(self.sell, self._sell, rtol = 1e-05, atol = 0):
                     self._sell = self.sell.copy()
 
                     # cancel orders
