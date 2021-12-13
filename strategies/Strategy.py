@@ -457,7 +457,7 @@ class Strategy(ABC):
                 self._prepare_buy(make_copies=False)
 
                 # if entry has been modified
-                if self.buy.shape != self._buy.shape or not np.allclose(self.buy, self._buy, rtol = 1e-05, atol = 0):
+                if self.buy is not None and self._buy is not None and self.buy.shape != self._buy.shape or not np.allclose(self.buy, self._buy, rtol = 1e-05, atol = 0):
                     self._buy = self.buy.copy()
 
                     # cancel orders
@@ -487,7 +487,7 @@ class Strategy(ABC):
                 self._prepare_sell(make_copies=False)
 
                 # if entry has been modified
-                if self.sell.shape != self._sell.shape or not np.allclose(self.sell, self._sell, rtol = 1e-05, atol = 0):
+                if self.sell is not None and self._sell is not None and self.sell.shape != self._sell.shape or not np.allclose(self.sell, self._sell, rtol = 1e-05, atol = 0):
                     self._sell = self.sell.copy()
 
                     # cancel orders
@@ -517,7 +517,7 @@ class Strategy(ABC):
                 self._prepare_take_profit(False)
 
                 # if _take_profit has been modified
-                if self.take_profit.shape != self._take_profit.shape or not np.allclose(self.take_profit, self._take_profit, rtol = 1e-05, atol = 0):
+                if self.take_profit is not None and self._take_profit is not None and self.take_profit.shape != self._take_profit.shape or not np.allclose(self.take_profit, self._take_profit, rtol = 1e-05, atol = 0):
                     self._take_profit = self.take_profit.copy()
 
                     # cancel orders
@@ -541,7 +541,7 @@ class Strategy(ABC):
                 self._prepare_stop_loss(False)
 
                 # if stop_loss has been modified
-                if self.stop_loss.shape != self._stop_loss.shape or not np.allclose(self.stop_loss, self._stop_loss, rtol = 1e-05, atol = 0):
+                if self.stop_loss is not None and self._stop_loss is not None and self.stop_loss.shape != self._stop_loss.shape or not np.allclose(self.stop_loss, self._stop_loss, rtol = 1e-05, atol = 0):
                     # prepare format
                     self._stop_loss = self.stop_loss.copy()
 
