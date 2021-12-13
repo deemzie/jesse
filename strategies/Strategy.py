@@ -517,7 +517,7 @@ class Strategy(ABC):
                 self._prepare_take_profit(False)
 
                 # if _take_profit has been modified
-                if self.take_profit is not None and self._take_profit is not None and self.take_profit.shape != self._take_profit.shape or not np.allclose(self.take_profit, self._take_profit, rtol = 1e-05, atol = 0):
+                if self._take_profit is None or self.take_profit.shape != self._take_profit.shape or not np.allclose(self.take_profit, self._take_profit, rtol = 1e-05, atol = 0):
                     self._take_profit = self.take_profit.copy()
 
                     # cancel orders
@@ -541,7 +541,7 @@ class Strategy(ABC):
                 self._prepare_stop_loss(False)
 
                 # if stop_loss has been modified
-                if self.stop_loss is not None and self._stop_loss is not None and self.stop_loss.shape != self._stop_loss.shape or not np.allclose(self.stop_loss, self._stop_loss, rtol = 1e-05, atol = 0):
+                if self._stop_loss is None or self.stop_loss.shape != self._stop_loss.shape or not np.allclose(self.stop_loss, self._stop_loss, rtol = 1e-05, atol = 0):
                     # prepare format
                     self._stop_loss = self.stop_loss.copy()
 
