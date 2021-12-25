@@ -501,7 +501,7 @@ class Strategy(ABC):
                         if o.is_active or o.is_queued:
                             self.broker.cancel_order(o.id)
                         elif o.is_executed:
-                            self._executed_close_orders.append(o)
+                            self._executed_open_orders.append(o)
                     self._open_position_orders = []
                     for o in self._sell:
                         # MARKET order
@@ -1137,7 +1137,8 @@ class Strategy(ABC):
             return None
 
         return (np.abs(arr[:, 0] * arr[:, 1])).sum() / np.abs(arr[:, 0]).sum()
-        
+    
+    @property    
     def average_open_price(self) -> float:
         executed = [[o.qty, o.price] for o in self._executed_open_orders] + [[o.qty, o.price] for o in self._open_position_orders if o.is_executed]
         arr = self._convert_to_numpy_array(executed, 'self.average_open_price')
@@ -1145,7 +1146,8 @@ class Strategy(ABC):
             return None
         else:
             return (np.abs(arr[:, 0] * arr[:, 1])).sum() / np.abs(arr[:, 0]).sum()
-        
+    
+    @property
     def average_close_price(self) -> float:
         executed = [[o.qty, o.price] for o in self._executed_close_orders] + [[o.qty, o.price] for o in self._close_position_orders if o.is_executed]
         arr = self._convert_to_numpy_array(executed, 'average_close_price')
